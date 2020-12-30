@@ -1,5 +1,41 @@
+.row {
+    margin-left: 20px;
+}
+
+.row_posters {
+    /* flexbox - turns list row horizontal instead of vertical */
+    display: flex;
+
+    /* hide any room for vertical scrollbar */
+    overflow-y: hidden;
+    overflow-x: scroll;
+
+    /* undoes the cropping from the hidden overflow ccs above */
+    padding: 20px;
+}
+
+/* hide scrollbar */
+.row_posters::-webkit-scrollbar {
+    display: none;
+}
+
 .row_poster {
     object-fit: contain;
     width: 100%;
-    max-height: 500px;
+    max-height: 100px;
+    margin-right: 10px;
+    /* if ever change size for any reason (i.e. hover effect), this adds slight transition animation */
+    transition: 450ms;
+}
+
+.row_poster:hover {
+    transform: scale(1.08);
+}
+
+.row_posterLarge {
+    max-height: 250px;
+}
+
+.row_posterLarge:hover {
+    transform: scale(1.09);
 }
