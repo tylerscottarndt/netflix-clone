@@ -1,4 +1,5 @@
 import './App.css';
+import Nav from './Nav';
 import Banner from './Banner';
 import Row from './Row';
 import requests from './requests';
@@ -6,6 +7,7 @@ import requests from './requests';
 function App() {
     return (
         <div className="app">
+            <Nav />
             <Banner />
             <Row
                 title="NETFLIX ORIGINALS"
