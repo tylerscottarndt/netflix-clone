@@ -39,7 +39,7 @@ function Banner() {
                 {/* movie data will either contain title, name, or original name. We need to account for this */}
                 {/* will check in priority order -> movie, then name, then original_name */}
                 <h1 className="banner_title">
-                    {movie?.title || movie?.name || movie?.original_name}
+                    {movie?.title || movie?.name || movie?.original_name || ''}
                 </h1>
                 <div className="banner_buttons">
                     <button className="banner_button">Play</button>

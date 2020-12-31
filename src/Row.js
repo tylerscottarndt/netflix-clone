@@ -7,13 +7,9 @@ import movieTrailer from 'movie-trailer';
 const base_url = 'https://image.tmdb.org/t/p/original/';
 
 function Row({ title, fetchUrl, isLargeRow }) {
-    //state is the way to write variables in REACT
-    //useState sets the 'movies' initial value (to the empty array)
     const [movies, setMovies] = useState([]);
     const [trailerUrl, setTrailerUrl] = useState('');
 
-    //now we populate it with something
-    //when the Row loads, we want to run this code, which makes an API request to TMD (using the Axios library)
     useEffect(() => {
         //API call to external resource will take a second, so we need to run it asynchronously
         //create the async funciton
@@ -24,7 +20,6 @@ function Row({ title, fetchUrl, isLargeRow }) {
             return request;
         }
 
-        //declare the async function
         fetchData();
 
         //in useEffect, any variable that is being pulled from the outside HAS to be placed in the array below, because it's now DEPENDENT on that variable
@@ -36,7 +31,7 @@ function Row({ title, fetchUrl, isLargeRow }) {
         height: '390',
         width: '100%',
 
-        // autoplay when it loads in
+        // automatically play when it loads in
         playerVars: {
             autoplay: 1,
         },
@@ -49,7 +44,9 @@ function Row({ title, fetchUrl, isLargeRow }) {
         } else {
             // movieTrailer from npm module
             // empty quotes is in case the name is undefined
-            movieTrailer(movie?.name || '')
+            movieTrailer(
+                movie?.name || movie?.title || movie?.original_name || ''
+            )
                 .then((url) => {
                     //https://www.youtube.com/watch?v=ABCDEF12345
                     //this trick will give us the query parameter to the end, inclusive.
@@ -57,7 +54,7 @@ function Row({ title, fetchUrl, isLargeRow }) {
 
                     //allows us to do a get request on the v param
                     setTrailerUrl(urlParams.get('v'));
-                    console.log('TRAILER URL IS' + urlParams.get('v'));
+                    console.log('TRAILER URL IS ' + urlParams.get('v'));
                 })
                 .catch((error) => console.log(error));
         }
