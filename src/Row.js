@@ -38,26 +38,26 @@ function Row({ title, fetchUrl, isLargeRow }) {
     };
 
     const handleClick = (movie) => {
-        //if video's open and already playing, we want to close it
-        if (trailerUrl) {
-            setTrailerUrl('');
-        } else {
-            // movieTrailer from npm module
-            // empty quotes is in case the name is undefined
-            movieTrailer(
-                movie?.name || movie?.title || movie?.original_name || ''
-            )
-                .then((url) => {
-                    //https://www.youtube.com/watch?v=ABCDEF12345
-                    //this trick will give us the query parameter to the end, inclusive.
-                    const urlParams = new URLSearchParams(new URL(url).search);
+        // movieTrailer from npm module
+        // empty quotes is in case the name is undefined
+        movieTrailer(movie?.name || movie?.title || movie?.original_name || '')
+            .then((url) => {
+                //https://www.youtube.com/watch?v=ABCDEF12345
+                //this trick will give us the query parameter to the end, inclusive.
+                const urlParams = new URLSearchParams(new URL(url).search);
 
-                    //allows us to do a get request on the v param
-                    setTrailerUrl(urlParams.get('v'));
-                    console.log('TRAILER URL IS ' + urlParams.get('v'));
-                })
-                .catch((error) => console.log(error));
-        }
+                //allows us to do a get request on the v param
+                const requestedTrailer = urlParams.get('v');
+                if (
+                    !trailerUrl ||
+                    (trailerUrl && trailerUrl != requestedTrailer)
+                ) {
+                    setTrailerUrl(requestedTrailer);
+                } else {
+                    setTrailerUrl('');
+                }
+            })
+            .catch((error) => console.log(error));
     };
 
     return (
