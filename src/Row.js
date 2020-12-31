@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from './axios';
 import './Row.css';
+import YouTube from 'react-youtube';
+import movieTrailer from 'movie-trailer';
 
 const base_url = 'https://image.tmdb.org/t/p/original/';
 
@@ -8,6 +10,7 @@ function Row({ title, fetchUrl, isLargeRow }) {
     //state is the way to write variables in REACT
     //useState sets the 'movies' initial value (to the empty array)
     const [movies, setMovies] = useState([]);
+    const [trailerUrl, setTrailerUrl] = useState('');
 
     //now we populate it with something
     //when the Row loads, we want to run this code, which makes an API request to TMD (using the Axios library)
@@ -29,6 +32,37 @@ function Row({ title, fetchUrl, isLargeRow }) {
         //if list of dependencies like [fetchData], it runs once when row loads and again every time 'fetchData' changes
     }, [fetchUrl]);
 
+    const opts = {
+        height: '390',
+        width: '100%',
+
+        // autoplay when it loads in
+        playerVars: {
+            autoplay: 1,
+        },
+    };
+
+    const handleClick = (movie) => {
+        //if video's open and already playing, we want to close it
+        if (trailerUrl) {
+            setTrailerUrl('');
+        } else {
+            // movieTrailer from npm module
+            // empty quotes is in case the name is undefined
+            movieTrailer(movie?.name || '')
+                .then((url) => {
+                    //https://www.youtube.com/watch?v=ABCDEF12345
+                    //this trick will give us the query parameter to the end, inclusive.
+                    const urlParams = new URLSearchParams(new URL(url).search);
+
+                    //allows us to do a get request on the v param
+                    setTrailerUrl(urlParams.get('v'));
+                    console.log('TRAILER URL IS' + urlParams.get('v'));
+                })
+                .catch((error) => console.log(error));
+        }
+    };
+
     return (
         <div className="row">
             <h2>{title}</h2>
@@ -37,6 +71,7 @@ function Row({ title, fetchUrl, isLargeRow }) {
                 {movies.map((movie) => (
                     <img
                         key={movie.id}
+                        onClick={() => handleClick(movie)}
                         className={`row_poster ${
                             isLargeRow && 'row_posterLarge'
                         }`}
@@ -47,6 +82,7 @@ function Row({ title, fetchUrl, isLargeRow }) {
                     ></img>
                 ))}
             </div>
+            {trailerUrl && <YouTube videoId={trailerUrl} opts={opts} />}
         </div>
     );
 }
